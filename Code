@@ -1,0 +1,132 @@
+#https://colab.research.google.com/drive/14XLrloNY_kVAeaiIhRNA-8CbOHtpUmG6?usp=sharing#scrollTo=RJ_KLVOg0mj8
+import keras
+
+data = mnist.load_data()
+(train_images, train_labels), (test_images, test_labels) = data
+
+len(train_images)
+Ans : 60000
+
+len(test_images)
+Ans : 10000
+
+train_images = train_images.reshape((60000, 28, 28, 1))
+
+test_images = test_images.reshape((10000, 28, 28, 1))
+
+train_images = train_images.astype('float')/255 #normalization
+
+test_images = test_images.astype('float')/255 #normalization
+
+from keras.preprocessing import image
+import matplotlib.pyplot as plt
+
+plt.imshow(image.array_to_img(train_images[20]), cmap="gray")
+
+train_labels[20]
+Ans : 4
+
+#lable = 4
+0 0 0 0 1 0 0 0 0 0
+
+from keras.utils import to_categorical
+train_labels_original = train_labels
+train_labels = to_categorical(train_labels)
+
+train_labels[20]
+Ans : array([0., 0., 0., 0., 1., 0., 0., 0., 0., 0.], dtype=float32)
+
+test_labels_original = test_labels
+test_labels = to_categorical(test_labels)
+
+test_labels_original[7]
+Ans : 9
+
+test_labels[7]
+Ans : array([0., 0., 0., 0., 0., 0., 0., 0., 0., 1.], dtype=float32)
+
+
+from keras import layers, models
+model = models.Sequential()
+model.add(layers.Conv2D(32, (3,3), activation='relu', input_shape = (28,28,1)))
+model.summary()
+Ans :
+Model: "sequential_2"
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #   
+=================================================================
+conv2d_1 (Conv2D)            (None, 26, 26, 32)        320       
+=================================================================
+Total params: 320
+Trainable params: 320
+Non-trainable params: 0
+_________________________________________________________________
+
+
+model.add(layers.MaxPooling2D((2,2)))
+model.add(layers.Conv2D(64, (3,3), activation = 'relu'))
+model.summary()
+Model: "sequential_2"
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #   
+=================================================================
+conv2d_1 (Conv2D)            (None, 26, 26, 32)        320       
+_________________________________________________________________
+max_pooling2d_1 (MaxPooling2 (None, 13, 13, 32)        0         
+_________________________________________________________________
+conv2d_2 (Conv2D)            (None, 11, 11, 64)        18496     
+_________________________________________________________________
+max_pooling2d_2 (MaxPooling2 (None, 5, 5, 64)          0         
+=================================================================
+Total params: 18,816
+Trainable params: 18,816
+Non-trainable params: 0
+_________________________________________________________________
+
+
+model.add(layers.MaxPooling2D((2,2)))
+model.add(layers.Conv2D(64, (3,3), activation='relu'))
+model.summary()
+Model: "sequential_2"
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #   
+=================================================================
+conv2d_1 (Conv2D)            (None, 26, 26, 32)        320       
+_________________________________________________________________
+max_pooling2d_1 (MaxPooling2 (None, 13, 13, 32)        0         
+_________________________________________________________________
+conv2d_2 (Conv2D)            (None, 11, 11, 64)        18496     
+_________________________________________________________________
+max_pooling2d_2 (MaxPooling2 (None, 5, 5, 64)          0         
+_________________________________________________________________
+conv2d_3 (Conv2D)            (None, 3, 3, 64)          36928     
+=================================================================
+Total params: 55,744
+Trainable params: 55,744
+Non-trainable params: 0
+_________________________________________________________________
+
+
+model.add(layers.Flatten())
+model.summary()
+Model: "sequential_2"
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #   
+=================================================================
+conv2d_1 (Conv2D)            (None, 26, 26, 32)        320       
+_________________________________________________________________
+max_pooling2d_1 (MaxPooling2 (None, 13, 13, 32)        0         
+_________________________________________________________________
+conv2d_2 (Conv2D)            (None, 11, 11, 64)        18496     
+_________________________________________________________________
+max_pooling2d_2 (MaxPooling2 (None, 5, 5, 64)          0         
+_________________________________________________________________
+conv2d_3 (Conv2D)            (None, 3, 3, 64)          36928     
+_________________________________________________________________
+flatten_1 (Flatten)          (None, 576)               0         
+=================================================================
+Total params: 55,744
+Trainable params: 55,744
+Non-trainable params: 0
+_________________________________________________________________
+
